@@ -1,18 +1,35 @@
 import React, { useState } from 'react';
 
 import styles from './TodoPanel.module.css';
+import Button from '../Button/Button';
 
 const DEFAULT_TODO = {
     name: '',
     desc: '',
 };
 
-const TodoPanel = () => {
+type Todo = {
+    id: number;
+    name: string;
+    desc: string;
+    checked: boolean;
+};
+
+interface TodoPanelProps {
+    addTodo: ({ name, desc }: Omit<Todo, 'checked' | 'id'>) => void;
+}
+
+const TodoPanel: React.FC<TodoPanelProps> = ({ addTodo }) => {
     const [todo, setTodo] = useState(DEFAULT_TODO);
 
     const onChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = event.target;
         setTodo({ ...todo, [name]: value });
+    };
+
+    const onClick = () => {
+        addTodo({ name: todo.name, desc: todo.desc });
+        setTodo(DEFAULT_TODO);
     };
 
     return (
@@ -44,7 +61,9 @@ const TodoPanel = () => {
                 </div>
             </div>
             <div className={styles.button_container}>
-                <button>ADD</button>
+                <Button color="blue" onClick={onClick}>
+                    ADD
+                </Button>
             </div>
         </div>
     );
