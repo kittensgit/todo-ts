@@ -7,9 +7,10 @@ import Button from '../../Button/Button';
 interface TodoItemProps {
     todo: Todo;
     checkTodo: (id: Todo['id']) => void;
+    deleteTodo: (id: Todo['id']) => void;
 }
 
-const TodoItem: React.FC<TodoItemProps> = ({ todo, checkTodo }) => {
+const TodoItem: React.FC<TodoItemProps> = ({ todo, checkTodo, deleteTodo }) => {
     return (
         <div className={styles.todo_item_container}>
             <div>
@@ -30,7 +31,9 @@ const TodoItem: React.FC<TodoItemProps> = ({ todo, checkTodo }) => {
             </div>
             <div className={styles.todo_item_button_container}>
                 <Button color="orange">EDIT</Button>
-                <Button color="red">DELETE</Button>
+                <Button color="red" onClick={() => deleteTodo(todo.id)}>
+                    DELETE
+                </Button>
             </div>
         </div>
     );
