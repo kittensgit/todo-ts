@@ -2,17 +2,11 @@ import React, { useState } from 'react';
 
 import styles from './TodoPanel.module.css';
 import Button from '../Button/Button';
+import { Todo } from '../../type';
 
 const DEFAULT_TODO = {
     name: '',
     desc: '',
-};
-
-type Todo = {
-    id: number;
-    name: string;
-    desc: string;
-    checked: boolean;
 };
 
 interface TodoPanelProps {
