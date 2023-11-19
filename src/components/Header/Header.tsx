@@ -6,14 +6,10 @@ interface HeaderProps {
     todoCount: number;
 }
 
-const Header: React.FC<HeaderProps> = ({ todoCount }) => {
-    return (
-        <div className={styles.header_container}>
-            <div className={styles.header_title}>
-                Todo List <b>{todoCount}</b> task(s)
-            </div>
-        </div>
-    );
-};
-
-export default Header;
+export const Header: React.FC<HeaderProps> = ({ todoCount }) => (
+    <div className={styles.header_container}>
+        <h1 className={styles.header_title}>
+            Todo list <b>{todoCount}</b> task(s)
+        </h1>
+    </div>
+);

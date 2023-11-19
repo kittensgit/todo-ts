@@ -1,28 +1,45 @@
-import React, { useState } from 'react';
+import React from 'react';
 import styles from './App.module.css';
-import Header from './components/Header/Header';
-import TodoPanel from './components/TodoPanel/TodoPanel';
 import { Todo } from './type';
-import TodoList from './components/TodoList/TodoList';
+import { Header } from './components/Header/Header';
+import { TodoList } from './components/TodoList/TodoList';
+import { TodoPanel } from './components/TodoPanel/TodoPanel';
 
 const DEFAULT_TODO_LIST = [
-    { id: 1, name: 'Task 1', desc: 'desc 1', checked: false },
-    { id: 2, name: 'Task 2', desc: 'desc 1', checked: false },
+    { id: 1, name: 'task 1', description: 'description 1', checked: false },
+    { id: 2, name: 'task 2', description: 'description 2', checked: false },
     {
         id: 3,
-        name: 'Task 3',
-        desc: 'Labore mollit adipisicing laboris proident sit fugiat laborum sit. Nisi ex deserunt tempor proident elit dolore reprehenderit incididunt eu anim ea laboris adipisicing. Commodo aliquip ut sint occaecat nisi culpa excepteur reprehenderit esse exercitation.',
+        name: 'task 3',
+        description:
+            'so long task description 3 so long task description so long task description so long task description so long task description',
         checked: true,
     },
 ];
 
-function App() {
-    const [todos, setTodos] = useState(DEFAULT_TODO_LIST);
+export const App = () => {
+    const [todoIdForEdit, setTodoIdForEdit] = React.useState<number | null>(
+        null
+    );
+    const [todos, setTodos] = React.useState(DEFAULT_TODO_LIST);
 
-    const addTodo = ({ name, desc }: Omit<Todo, 'checked' | 'id'>) => {
+    const selectTodoIdForEdit = (id: Todo['id']) => {
+        setTodoIdForEdit(id);
+    };
+
+    const deleteTodo = (id: Todo['id']) => {
+        setTodos(todos.filter((todo) => todo.id !== id));
+    };
+
+    const addTodo = ({ name, description }: Omit<Todo, 'id' | 'checked'>) => {
         setTodos([
             ...todos,
-            { id: todos[todos.length - 1].id + 1, desc, name, checked: false },
+            {
+                id: todos[todos.length - 1].id + 1,
+                description,
+                name,
+                checked: false,
+            },
         ]);
     };
 
@@ -37,23 +54,35 @@ function App() {
         );
     };
 
-    const deleteTodo = (id: Todo['id']) => {
-        setTodos(todos.filter((todo) => todo.id !== id));
+    const changeTodo = ({
+        name,
+        description,
+    }: Omit<Todo, 'id' | 'checked'>) => {
+        setTodos(
+            todos.map((todo) => {
+                if (todo.id === todoIdForEdit) {
+                    return { ...todo, name, description };
+                }
+                return todo;
+            })
+        );
+        setTodoIdForEdit(null);
     };
 
     return (
-        <div className={styles.app__container}>
+        <div className={styles.app_container}>
             <div className={styles.container}>
                 <Header todoCount={todos.length} />
-                <TodoPanel addTodo={addTodo} />
+                <TodoPanel mode="add" addTodo={addTodo} />
                 <TodoList
+                    todoIdForEdit={todoIdForEdit}
                     todos={todos}
-                    checkTodo={checkTodo}
                     deleteTodo={deleteTodo}
+                    checkTodo={checkTodo}
+                    selectTodoIdForEdit={selectTodoIdForEdit}
+                    changeTodo={changeTodo}
                 />
             </div>
         </div>
     );
-}
-
-export default App;
+};

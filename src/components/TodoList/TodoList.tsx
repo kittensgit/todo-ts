@@ -1,30 +1,45 @@
 import React from 'react';
+
+import { TodoItem } from './TodoItem/TodoItem';
+import { TodoPanel } from '../TodoPanel/TodoPanel';
 import { Todo } from '../../type';
-import TodoItem from './TodoItem/TodoItem';
 
 interface TodoListProps {
+    todoIdForEdit: Todo['id'] | null;
     todos: Todo[];
-    checkTodo: (id: Todo['id']) => void;
     deleteTodo: (id: Todo['id']) => void;
+    checkTodo: (id: Todo['id']) => void;
+    selectTodoIdForEdit: (id: Todo['id']) => void;
+    changeTodo: ({ name, description }: Omit<Todo, 'id' | 'checked'>) => void;
 }
 
-const TodoList: React.FC<TodoListProps> = ({
+export const TodoList: React.FC<TodoListProps> = ({
     todos,
-    checkTodo,
+    todoIdForEdit,
+    changeTodo,
     deleteTodo,
-}) => {
-    return (
-        <div>
-            {todos.map((todo) => (
+    checkTodo,
+    selectTodoIdForEdit,
+}) => (
+    <div>
+        {todos.map((todo) => {
+            if (todo.id === todoIdForEdit)
+                return (
+                    <TodoPanel
+                        mode="edit"
+                        changeTodo={changeTodo}
+                        editTodo={todo}
+                    />
+                );
+            return (
                 <TodoItem
                     key={todo.id}
                     todo={todo}
-                    checkTodo={checkTodo}
                     deleteTodo={deleteTodo}
+                    checkTodo={checkTodo}
+                    selectTodoIdForEdit={selectTodoIdForEdit}
                 />
-            ))}
-        </div>
-    );
-};
-
-export default TodoList;
+            );
+        })}
+    </div>
+);
